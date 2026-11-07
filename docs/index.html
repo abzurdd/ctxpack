@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ctxpack — Fast Codebase Prompt Bundler for LLMs</title>
+  <meta name="description" content="Zero-dependency CLI & library to bundle codebases into token-counted, secret-safe prompts for Claude, Gemini, and GPT.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --border: #1f293d;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --code-bg: #05070d;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0 1.5rem;
+    }
+    header {
+      max-width: 900px;
+      margin: 4rem auto 2rem;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 2rem;
+    }
+    .quick-install {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      color: #38bdf8;
+      margin-bottom: 3rem;
+    }
+    .quick-install button {
+      background: transparent;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .quick-install button:hover {
+      background: #38bdf8;
+      color: #000;
+    }
+    main {
+      max-width: 900px;
+      margin: 0 auto 4rem;
+    }
+    .playground {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .playground h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .playground p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      background: var(--code-bg);
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 1rem;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-bottom: 1.5rem;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    footer {
+      max-width: 900px;
+      margin: 4rem auto 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">Open Source • MIT Licensed • Zero Dependencies</div>
+    <h1>ctxpack</h1>
+    <p class="subtitle">Bundle repositories into token-counted, leak-safe prompts optimized for Claude, Gemini, and GPT.</p>
+    <div class="quick-install">
+      <span>$ npx ctxpack . --xml -c</span>
+      <button onclick="navigator.clipboard.writeText('npx ctxpack . --xml -c'); this.innerText = 'Copied!'; setTimeout(() => this.innerText = 'Copy', 2000);">Copy</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="playground">
+      <h2>Interactive Token & Context Estimator</h2>
+      <p>Type or paste your code snippet below to estimate Claude & GPT context consumption in real-time.</p>
+      
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-label">Characters</span>
+          <span class="stat-val" id="charCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Lines</span>
+          <span class="stat-val" id="lineCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Claude Tokens (Est.)</span>
+          <span class="stat-val" id="claudeTokens">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">GPT Tokens (Est.)</span>
+          <span class="stat-val" id="gptTokens">0</span>
+        </div>
+      </div>
+
+      <textarea id="codeInput" placeholder="Paste source code or markdown here...">// Sample snippet
+function processContext(repo, files) {
+  const safeFiles = files.filter(f => !f.isSensitive);
+  return {
+    repo,
+    bundled: safeFiles.length,
+    timestamp: Date.now()
+  };
+}</textarea>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="copyContext()">Copy Claude Prompt</button>
+        <button class="btn btn-secondary" onclick="loadSample()">Load Sample Codebase</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Released under the <a href="https://github.com/abzurdd/ctxpack/blob/main/LICENSE">MIT License</a>. Maintained by <a href="https://github.com/abzurdd">@abzurdd</a> on GitHub.</p>
+  </footer>
+
+  <script>
+    const input = document.getElementById('codeInput');
+    const charCount = document.getElementById('charCount');
+    const lineCount = document.getElementById('lineCount');
+    const claudeTokens = document.getElementById('claudeTokens');
+    const gptTokens = document.getElementById('gptTokens');
+
+    function updateStats() {
+      const text = input.value;
+      charCount.innerText = text.length.toLocaleString();
+      lineCount.innerText = (text ? text.split('\n').length : 0).toLocaleString();
+
+      const tokens = text.match(/\w+|[^\s\w]|\s+/g);
+      let count = 0;
+      if (tokens) {
+        for (const chunk of tokens) {
+          if (/^\s+$/.test(chunk)) {
+            count += Math.max(1, Math.floor(chunk.length / 4));
+          } else if (chunk.length > 8) {
+            count += Math.ceil(chunk.length / 3.5);
+          } else {
+            count += 1;
+          }
+        }
+      }
+      claudeTokens.innerText = Math.round(count * 1.02).toLocaleString();
+      gptTokens.innerText = Math.round(count * 0.98).toLocaleString();
+    }
+
+    function copyContext() {
+      const text = input.value;
+      const xml = `<documents>\n  <document index="1">\n    <source>sample.js</source>\n    <document_content><![CDATA[\n${text}\n]]></document_content>\n  </document>\n</documents>`;
+      navigator.clipboard.writeText(xml);
+      alert('Claude XML Context copied to clipboard!');
+    }
+
+    function loadSample() {
+      input.value = `// Sample multi-file context representation\nimport fs from 'node:fs';\nimport path from 'node:path';\n\nexport function scan(dir) {\n  return fs.readdirSync(dir).filter(f => !f.startsWith('.env'));\n}`;
+      updateStats();
+    }
+
+    input.addEventListener('input', updateStats);
+    updateStats();
+  </script>
+</body>
+</html>
