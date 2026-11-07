@@ -5,6 +5,7 @@
 **Fast, zero-dependency CLI & library to bundle codebases into token-counted, secret-safe context prompts for Claude, Gemini, and GPT.**
 
 [![CI](https://github.com/abzurdd/ctxpack/actions/workflows/ci.yml/badge.svg)](https://github.com/abzurdd/ctxpack/actions)
+[![GitHub Pages](https://img.shields.io/badge/Live%20Playground-GitHub%20Pages-blue)](https://abzurdd.github.io/ctxpack/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/abzurdd/ctxpack/blob/main/CONTRIBUTING.md)
@@ -38,6 +39,9 @@ npx ctxpack . -o prompt.md
 # Format specifically for Anthropic Claude (XML) and copy straight to clipboard
 npx ctxpack ./src --xml --copy
 
+# Bundle only uncommitted git changes for instant code review in Claude
+npx @abzurdd/ctxpack . --diff --xml --copy
+
 # Check codebase token estimate without printing files
 npx ctxpack . --stats
 ```
@@ -62,6 +66,8 @@ npm install -g ctxpack
 | `--ignore <list>` | `-i` | Comma-separated list of ignore patterns | `""` |
 | `--max-size <kb>` | | Maximum single file size in KB to include | `512` |
 | `--no-gitignore` | | Ignore `.gitignore` rules during scan | `false` |
+| `--diff` | | Bundle only files modified in git diff (unstaged + staged) | `false` |
+| `--staged` | | Bundle only staged git files | `false` |
 | `--stats` | | Show token & file breakdown only | `false` |
 | `--version` | `-v` | Display version | |
 | `--help` | `-h` | Display help screen | |
@@ -119,3 +125,4 @@ Contributions, bug reports, and suggestions are welcome! Please read our [Contri
 ## 📄 License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+

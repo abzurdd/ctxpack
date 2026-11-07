@@ -20,3 +20,4 @@ Please include:
 - The potential impact.
 
 We take security seriously and will review and respond promptly.
+

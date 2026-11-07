@@ -32,3 +32,4 @@ test('formatXml produces Claude prompt structure', () => {
   assert.ok(xml.includes('print("hello world")'));
   assert.ok(xml.includes('</context>'));
 });
+

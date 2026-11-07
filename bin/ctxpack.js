@@ -22,6 +22,8 @@ OPTIONS:
   -i, --ignore <list>     Comma-separated custom ignore patterns (e.g. "*.test.js,docs")
   --max-size <kb>         Maximum file size in KB to include (default: 512)
   --no-gitignore          Do not read patterns from .gitignore
+  --diff                  Bundle only files modified in git diff
+  --staged                Bundle only staged git files
   --stats                 Print detailed token & file statistics only
   -c, --copy              Copy output directly to system clipboard
   -v, --version           Show current version
@@ -92,6 +94,10 @@ function parseArgs(args) {
       options.respectGitignore = false;
     } else if (arg === '--stats') {
       options.statsOnly = true;
+    } else if (arg === '--diff') {
+      options.diff = true;
+    } else if (arg === '--staged') {
+      options.staged = true;
     } else if (arg === '-c' || arg === '--copy') {
       options.copy = true;
     } else if (!arg.startsWith('-')) {
@@ -153,3 +159,4 @@ function run() {
 }
 
 run();
+

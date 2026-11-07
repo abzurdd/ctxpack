@@ -25,3 +25,4 @@ test('computeStats aggregates metrics across files', () => {
   assert.ok(stats.estimatedTokens.claude > 0);
   assert.ok(stats.estimatedTokens.gpt > 0);
 });
+

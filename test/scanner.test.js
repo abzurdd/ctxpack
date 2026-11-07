@@ -51,3 +51,10 @@ test('scanDirectory skips ignored directories and files', () => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 });
+
+
+test('scanDirectory handles git diff mode gracefully', () => {
+  const result = scanDirectory(__dirname, { diff: true });
+  assert.ok(Array.isArray(result.files));
+  assert.ok(Array.isArray(result.warnings));
+});
