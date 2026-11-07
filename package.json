@@ -1,9 +1,12 @@
 {
-  "name": "ctxpack",
+  "name": "@abzurdd/ctxpack",
   "version": "1.0.0",
   "description": "Fast, zero-dependency CLI & library to bundle codebases into token-counted, secret-safe prompts for Claude, Gemini, and GPT",
   "main": "./lib/index.js",
   "type": "commonjs",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "ctxpack": "./bin/ctxpack.js"
   },
